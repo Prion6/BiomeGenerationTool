@@ -12,5 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92401a3d2bf373c44bbeb9780046f9d2, type: 3}
   m_Name: Distorter
   m_EditorClassIdentifier: 
+  baseScale: 1
   octaves: 4
-  amplitude: 32
+  amplitude: 10
+  OffsetX: 65
+  OffsetY: 37
+  frecuency: 0.15
+  perlin: {fileID: 11400000, guid: 9483e5e5aa37f32488654b83eb11ac7f, type: 2}
+  PerlinSize: 2560

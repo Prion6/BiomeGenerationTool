@@ -11,6 +11,7 @@ using GeneticSharp.Domain.Terminations;
 using GeneticSharp.Infrastructure.Framework.Threading;
 using System.Threading;
 using System.Linq;
+using System;
 
 [System.Serializable]
 public class LayerController : ScriptableObject
@@ -154,10 +155,40 @@ public class RunningGa
         if (Thread != null && Thread.IsAlive)
             Thread.Abort();
         
+        /*var crossover = new AreaCrossover(0.03125f);
+        var mutation = new InsertionMutation();
+        var selection = new EliteSelection();
+        var population = new Population(8, 8, BaseChromosome);
+
+        GA = new GeneticAlgorithm(population, FitnessFunction, selection, crossover, mutation);
+        GA.CrossoverProbability = 1;
+
+        //GA.Termination = new GenerationNumberTermination(1);
+        //GA.Start();
+
+        //GA.Termination = new TimeEvolvingTermination(System.TimeSpan.FromHours(LifeCycle));
+        GA.Termination = new GenerationNumberTermination((int)LifeCycle);
+        GA.TaskExecutor = new ParallelTaskExecutor
+        {
+            MinThreads = 100,
+            MaxThreads = 200
+        };*/
+        //int i = 0;
+        //GA.GenerationRan += delegate { i++;  Debug.Log(i); };
+
+        //GA.Start();
+        Thread = new Thread(() => { GAInit(BaseChromosome,LifeCycle);
+        });
+        
+        Thread.Start();
+    }
+
+    void GAInit(IChromosome BaseChromosome, float LifeCycle)
+    {
         var crossover = new AreaCrossover(0.03125f);
         var mutation = new InsertionMutation();
         var selection = new EliteSelection();
-        var population = new Population(4, 40, BaseChromosome);
+        var population = new Population(8, 8, BaseChromosome);
 
         GA = new GeneticAlgorithm(population, FitnessFunction, selection, crossover, mutation);
         GA.CrossoverProbability = 1;
@@ -172,13 +203,7 @@ public class RunningGa
             MinThreads = 100,
             MaxThreads = 200
         };
-        //int i = 0;
-        //GA.GenerationRan += delegate { i++;  Debug.Log(i); };
 
-        //GA.Start();
-        Thread = new Thread(() => { GA.Start();
-        });
-        
-        Thread.Start();
+        GA.Start();
     }
 }

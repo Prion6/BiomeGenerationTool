@@ -41,15 +41,18 @@ public class LayerChromosome : FloatingPointChromosome
         Layer = layer;
     }
 
-    public LayerChromosome(Texture2D texture, int size, LayerController layer) : base(0, 1, texture.width * texture.height, 3)
+    public LayerChromosome(Texture2D texture, int size, LayerController layer) : base(0, 1, size, 3)
     {
-        //Debug.Log("Constructor");
+        //Debug.Log("A");
         N = (int)MathTools.Q_sqrt(size);
+        //Debug.Log("B");
         var genes = MathTools.Resize(texture.GetPixels(),texture.width,texture.height,N,N);
+        //Debug.Log("C");
         for (int i = 0; i < genes.Length; i++)
         {
             ReplaceGene(i, new Gene(genes[i].a));
         }
+        //Debug.Log("D");
         Layer = layer;
     }
 
@@ -91,7 +94,7 @@ public class LayerChromosome : FloatingPointChromosome
 
         if (texture.width != N || texture.height != N)
         {
-            Debug.Log("Resizing");
+            //Debug.Log("Resizing");
             //Using Graphuc class causes Editor Window to Crash
             texture.SetPixels(MathTools.Resize(pixels,N,N,texture.width,texture.height));
             //texture = TextureScaler.scaled(text, texture.width, texture.height);

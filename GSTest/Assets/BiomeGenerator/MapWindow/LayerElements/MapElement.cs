@@ -10,7 +10,7 @@ public class MapElement : MonoBehaviour
     public int priority;
     public List<BaseStat> stats;
     public List<BaseStat> requirements;
-    public Vector3 scaleRandomRange;
+    public float scaleRandomRange;
     public Vector3 rotationRandomRange;
     public Vector3 positionRandomRange;
 

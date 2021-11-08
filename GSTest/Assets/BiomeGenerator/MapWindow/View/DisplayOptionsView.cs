@@ -67,14 +67,11 @@ public class DisplayOptionsView : EditorPanel
                 {
                     BestChromosomes[i].Item2.Paint(BtnTextures[i], SelectedLayer.Controller.Color);
                 }
-                if(MapWindow.hasChanged)
-                {
-                    ResetCycle();
-                }
+                ResetCycle();
             }
         }
         timer.Stop();
-        UnityEngine.Debug.Log(timer.ElapsedMilliseconds/1000.0f);
+        //UnityEngine.Debug.Log(timer.ElapsedMilliseconds/1000.0f);
     }
 
     public void SetSelectedLayer(PaintView p)

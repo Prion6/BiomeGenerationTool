@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "ProceduralGeneration/PerlinNoise")]
-public class PerlinNoise : ScriptableObject, INoiseGenerator
+public class PerlinNoise : ScriptableObject
 {
     public float frequency;
     public float amplitude;
@@ -23,9 +23,10 @@ public class PerlinNoise : ScriptableObject, INoiseGenerator
         //GenerateNoiseMap(testTexture.width, testTexture.height);
     }
 
-    public float[] GenerateNoiseMap(LayerChromosome map)
+    public float[] GenerateNoiseMap(int size, int scale)
     {
-        var data = new float[map.N * map.N];
+        var data = new float[size*size*scale*scale];
+        int N = size * scale;
 
         /// track min and max noise value. Used to normalize the result to the 0 to 1.0 range.
         var min = float.MaxValue;
@@ -43,13 +44,13 @@ public class PerlinNoise : ScriptableObject, INoiseGenerator
         {
             /// parallel loop - easy and fast.
             Parallel.For(0
-                , map.N * map.N
+                , N * N
                 , (offset) =>
                 {
-                    var i = offset % map.N;
-                    var j = offset / map.N;
-                    var noise = Noise2D.Noise(i * f* 1f / map.N, j * f * 1f / map.N);
-                    noise = data[j * map.N + i] += noise * a;
+                    var i = offset % N;
+                    var j = offset / N;
+                    var noise = Noise2D.Noise(i * f* 1f / N, j * f * 1f / N);
+                    noise = data[j * N + i] += noise * a;
 
                     min = Mathf.Min(min, noise);
                     max = Mathf.Max(max, noise);
@@ -61,17 +62,7 @@ public class PerlinNoise : ScriptableObject, INoiseGenerator
             a /= 2;
         }
 
-        Parallel.For(0, map.N * map.N, (i) => data[i] = (data[i] - min) / (max - min));
-
-        var colors = data.Select(
-            (c) =>
-            {
-                return new Color(c, c, c, 1);
-            }
-        ).ToArray();
-
-        //testTexture.SetPixels(colors);
-        //testTexture.Apply();
+        Parallel.For(0, N * N, (i) => data[i] = (data[i] - min) / (max - min));
 
         return data;
 

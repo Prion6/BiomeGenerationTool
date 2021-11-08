@@ -6,16 +6,40 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ProceduralGeneration/PerlinNoiseDistortion")]
 public class PerlinNoiseDistortion : ScriptableObject, INoiseGenerator
 {
-    //public float baseScale = 4.7f;
-    public int octaves = 4;
-    public float amplitude = 5.0f;
+    [Range(0.00001f,2)]
+    public float baseScale;
+    [Range(1,16)]
+    public int octaves;
+    [Range(1,400)]
+    public float amplitude;
+    [Range(0, 128)]
+    public int OffsetX;
+    [Range(0, 128)]
+    public int OffsetY;
+    [Range(1, 100)]
+    public int step;
+
     //public float lacunarity = 2.0f;
-   // public float persistence = 0.5f;
+    // public float persistence = 0.5f;
     System.Random r = new System.Random();
 
     Vector2 seedX;
     Vector2 seedY;
     Vector2 seedA;
+
+    public PerlinNoise perlin;
+    float[] PerlinNoise;
+    public int PerlinSize;
+
+    private void Awake()
+    {
+        PerlinNoise = perlin.GenerateNoiseMap(PerlinSize, 1);
+    }
+
+    private void OnEnable()
+    {
+        PerlinNoise = perlin.GenerateNoiseMap(PerlinSize, 1);
+    }
 
     // Arbitrary numbers to break up visible correlation between octaves / x & y
     //public Vector2 seed = new Vector2(-71, 37);
@@ -61,31 +85,107 @@ public class PerlinNoiseDistortion : ScriptableObject, INoiseGenerator
     public float[] GenerateNoiseMap(LayerChromosome map)
     {
         var genes = map.ToFloatingPoints();
-        seedX = new Vector2(r.Next(0, 3000), r.Next(0, 3000));
-        seedY = new Vector2(r.Next(3000, 6000), r.Next(3000, 6000));
-        seedA = new Vector2(r.Next(6000, 9000), r.Next(6000, 9000));
-
-        float[] turbulentMap = new float[ map.N * map.N];
-        //Debug.Log(turbulentMap.Length);
-        for (int j = 0; j < map.N; j++)
-        {
-            for (int i = 0; i < map.N; i++)
-            {
-                int index = Mathf.Clamp(DistortedIndex(i, j, map.N, map.N), 0, genes.Length-1);
-                turbulentMap[j * map.N + i] = genes[index];
-                turbulentMap[j * map.N + i] *= (Mathf.Abs(Mathf.PerlinNoise(i * 1.0f / map.N + seedA.x, j * 1.0f / map.N + seedA.y)) + 0.5f);
-                
-            }
-        }
+        //Debug.Log(PerlinNoise.Length);
         
-        return turbulentMap;
+        return Smooth(DistortingNoise(genes, map.N, map.N),map.N,map.N);
     }
 
-    public int DistortedIndex(float x, float y, int width, int height)
+    public float[] GenerateNoiseMap(float[] map, int width, int height)
     {
-        float dx = (int)(x + amplitude * (Mathf.Abs(Mathf.PerlinNoise(x * 1.0f / width + seedX.x, y * 1.0f / height + seedX.y) - 0.5f)));
-        float dy = (int)(y + amplitude * (Mathf.Abs(Mathf.PerlinNoise(x * 1.0f / width + seedY.x, y * 1.0f / height + seedY.y) - 0.5f)));
+        //Debug.Log(PerlinNoise.Length);
 
-        return (int)(dy * width + dx);
+        return Smooth(DistortingNoise(map, width, height), width, height);
+    }
+
+
+    public float[] DistortingNoise(float[] inputData, int width, int height)
+    {
+        System.Random r = new System.Random();
+        float[] outputData = new float[inputData.Length];
+
+        //posición primer plot de perlinNoise
+        int x1 = (int)(r.NextDouble()*(PerlinSize/2));
+        int y1 = (int)(r.NextDouble() * (PerlinSize/2));
+
+        //posición segundo plot de perlinNoise
+        int x2 = (int)(r.NextDouble() * (PerlinSize - width));
+        int y2 = (int)(r.NextDouble() * (PerlinSize - height));
+
+        //tercerPlot
+        int x3 = (int)(r.NextDouble() * (PerlinSize - width));
+        int y3 = (int)(r.NextDouble() * (PerlinSize - height));
+
+        //int c = 0;
+
+
+
+        for (int j = 0; j < height; j++)
+        {
+            for (int i = 0; i < height; i++)
+            {
+                int dx = (int)(amplitude * (PerlinNoise[(y1 + j) * width + (x1 + i)] - 0.5f));
+                int dy = (int)(amplitude * (PerlinNoise[(y2 + j) * width + (x2 + i)] - 0.5f));
+                float da = (baseScale * (PerlinNoise[(y3 + j) * width + (x3 + i)] - 0.5f));
+
+                dx = Mathf.Clamp(dx + i, 0, width - 1);
+                dy = Mathf.Clamp(dy + j, 0, height - 1);
+                //if (dy > 0) c++;
+                //int index = Mathf.Clamp(((dy) * width + (dx)), 0, width * height);
+
+                outputData[j * width + i] = inputData[dy*width + dx] + da;
+            }
+        }
+
+        //Debug.Log(c);
+        return outputData;
+    }
+
+    public float[] Smooth(float[] inputData, int width, int height)
+    {
+        float[] outputData = new float[inputData.Length];
+        int[] dirs = { 1, width + 1, width, width - 1, -1, -width -1, -width, -width + 1};
+
+        float inputMax = 0;
+        float outputMax = 0;
+
+        for (int l = 0; l < octaves; l++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                for (int i = 0; i < width; i++)
+                {
+                    float val = inputData[j * width + i];
+                    if(val > inputMax)
+                    {
+                        inputMax = val;
+                    }
+                    int dots = 1;
+                        foreach (int k in dirs)
+                        {
+                            if ((j * width + i) + k < 0 || (j * width + i) + k > inputData.Length - 1)
+                            {
+                                continue;
+                            }
+                            dots++;
+                            val += inputData[(j * width + i) + k];
+                        }
+                    outputData[j * width + i] = ((val/dots));
+                    if (l == octaves - 1 && outputData[j * width + i] > outputMax)
+                    {
+                        outputMax = outputData[j * width + i];
+                    }
+                }
+            }
+            inputData = outputData;
+        }
+
+        float scale = inputMax / outputMax;
+
+        for(int i = 0; i < outputData.Length; i++)
+        {
+            outputData[i] = ((int)((outputData[i] * scale) * step)) / (step * 1.0f);
+        }
+
+        return outputData;
     }
 }

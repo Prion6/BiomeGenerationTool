@@ -8,9 +8,6 @@ using System;
 
 public class GeneralSettingsView : EditorPanel
 {
-    public int BrushSize { get; protected set; }
-    public float Intensity { get; protected set; }
-    public bool Acumulative { get; protected set; }
     //public int CurrentLayerIndex { get; protected set; }
     public PaintView SelectedLayer;
 
@@ -21,23 +18,19 @@ public class GeneralSettingsView : EditorPanel
 
     public System.Action OnAddLayerBtn;
 
-    List<PaintView> Layers;
+    public List<PaintView> Layers;
 
     public int AddedLayers { get; protected set; }
 
 
     Vector2 startPointsScrollPosition;
     bool showPoints;
-    public bool paintPoints { get; protected set; }
 
     //GUIStyle TextStyle;
 
     public GeneralSettingsView(int x, int y, int width, int height) : base(x, y, width, height)
     {
         Layers = new List<PaintView>();
-        BrushSize = 10;
-        Intensity = 0.1f;
-        Acumulative = false;
         layerScrollPosition = Vector2.zero;
         startPointsScrollPosition = Vector2.zero;
         //CurrentLayerIndex = -1;
@@ -45,7 +38,6 @@ public class GeneralSettingsView : EditorPanel
         AddedLayers = 0;
         SelectedLayer = null;
         showPoints = false;
-        paintPoints = true;
         //TextStyle.normal.textColor = Color.black;
     }
 
@@ -94,20 +86,8 @@ public class GeneralSettingsView : EditorPanel
         EditorGUILayout.Space();
 
         EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("Brush Size\t");
-        BrushSize = (int)EditorGUILayout.Slider(BrushSize, 1, 52);
-        EditorGUILayout.EndHorizontal();
 
-        EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("Intensity\t");
-        Intensity = EditorGUILayout.Slider(Intensity, 0, 1);
-        EditorGUILayout.EndHorizontal();
-
-        Acumulative = EditorGUILayout.Toggle("Acumulative", Acumulative);
-        paintPoints = EditorGUILayout.Toggle("Start Points", paintPoints);
-
-        EditorGUILayout.Space();
-
+        EditorGUILayout.BeginVertical();
         #region Positions
         showPoints = EditorGUILayout.BeginFoldoutHeaderGroup(showPoints, "Start Positions");
         if (showPoints)
@@ -149,7 +129,11 @@ public class GeneralSettingsView : EditorPanel
         EditorGUILayout.EndFoldoutHeaderGroup();
         #endregion
 
+        EditorGUILayout.EndVertical();
 
+        EditorGUILayout.Space();
+
+        EditorGUILayout.BeginVertical();
         #region Layer Management
         showLayers = EditorGUILayout.BeginFoldoutHeaderGroup(showLayers, "Layers");
         if (showLayers)
@@ -207,6 +191,10 @@ public class GeneralSettingsView : EditorPanel
         }
         EditorGUILayout.EndFoldoutHeaderGroup();
         #endregion
+        EditorGUILayout.EndVertical();
+
+
+        EditorGUILayout.EndHorizontal();
 
         GUILayout.EndArea();
 
@@ -234,7 +222,7 @@ public class GeneralSettingsView : EditorPanel
         Rect.x = offsetX;
         Rect.y = offsetY;
 
-        AddLayer(512,512);
+        //AddLayer(512,512);
     }
 }
 

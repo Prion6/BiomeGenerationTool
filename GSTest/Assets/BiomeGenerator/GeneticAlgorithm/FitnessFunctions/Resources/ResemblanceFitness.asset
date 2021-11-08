@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: ResemblanceFitness
   m_EditorClassIdentifier: 
   label: Resemblance
-  Divergence: 0
+  Divergence: 0.1

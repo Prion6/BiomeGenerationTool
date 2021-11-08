@@ -10,13 +10,11 @@ using GeneticSharp.Domain.Fitnesses;
 public class LayerSettingsView : EditorPanel
 {
     public LayerController SelectedLayer { get; set; }
-    bool fitnessSelection;
-    Vector2 fitnessScrollPos;
-    bool mapElements;
-    Vector2 elementsScrollPos;
+    Vector2 scrollPos;
 
     public LayerSettingsView(int x, int y, int width, int height) : base(x, y, width, height)
     {
+        scrollPos = Vector2.zero;
     }
 
     public void Update()
@@ -35,9 +33,12 @@ public class LayerSettingsView : EditorPanel
         GUILayout.Label("Layer Settings", EditorStyles.boldLabel);
         EditorGUILayout.Space();
         var editor = Editor.CreateEditor(SelectedLayer);
-        editor.DrawDefaultInspector();
 
-        if(SelectedLayer.GeneticAlgorithms.Count > 8)
+        scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+        editor.DrawDefaultInspector();
+        EditorGUILayout.EndScrollView();
+
+        if (SelectedLayer.GeneticAlgorithms.Count > 8)
         {
             SelectedLayer.GeneticAlgorithms.RemoveRange(8, SelectedLayer.GeneticAlgorithms.Count - 8);
         }
