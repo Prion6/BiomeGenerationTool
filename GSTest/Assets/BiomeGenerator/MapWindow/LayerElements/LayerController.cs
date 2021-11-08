@@ -104,7 +104,7 @@ public class LayerController : ScriptableObject
         {
             if (GeneticAlgorithms[i] != null)
             {
-                GeneticAlgorithms[i].Init(BaseChromosome,LifeCycle);
+                GeneticAlgorithms[i].Init(BaseChromosome,LifeCycle,noiseGenerator);
             }
         }
     }
@@ -149,7 +149,7 @@ public class RunningGa
         FitnessFunction = fitnessFunction;
     }
 
-    public void Init(IChromosome BaseChromosome, float LifeCycle)
+    public void Init(IChromosome BaseChromosome, float LifeCycle, INoiseGenerator noiseGenerator)
     {
         if (FitnessFunction == null) return;
         if (Thread != null && Thread.IsAlive)
@@ -177,16 +177,17 @@ public class RunningGa
         //GA.GenerationRan += delegate { i++;  Debug.Log(i); };
 
         //GA.Start();
-        Thread = new Thread(() => { GAInit(BaseChromosome,LifeCycle);
+        Thread = new Thread(() => { GAInit(BaseChromosome,LifeCycle, noiseGenerator);
         });
         
         Thread.Start();
     }
 
-    void GAInit(IChromosome BaseChromosome, float LifeCycle)
+    void GAInit(IChromosome BaseChromosome, float LifeCycle, INoiseGenerator noiseGenerator)
     {
-        var crossover = new AreaCrossover(0.03125f);
-        var mutation = new InsertionMutation();
+        var crossover = new AreaCrossover(0.125f);
+        //var mutation = new InsertionMutation();
+        var mutation = new DistortionMutation(noiseGenerator, 0.625f);
         var selection = new EliteSelection();
         var population = new Population(8, 8, BaseChromosome);
 
