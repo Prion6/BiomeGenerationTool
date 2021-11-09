@@ -271,17 +271,19 @@ public class MapWindow : EditorWindow
                         if(r <= 0)
                         {
                             Vector3 dPosition = new Vector3(UnityEngine.Random.Range(0, m.positionRandomRange.x), 
-                                UnityEngine.Random.Range(0, m.positionRandomRange.y), 
+                                0, 
                                 UnityEngine.Random.Range(0, m.positionRandomRange.z));
 
                             Vector3 dRotation = new Vector3(UnityEngine.Random.Range(0, m.rotationRandomRange.x),
                                 UnityEngine.Random.Range(0, m.rotationRandomRange.y),
                                 UnityEngine.Random.Range(0, m.rotationRandomRange.z));
 
-                            Vector3 pos = selectedTerrain.transform.position + new Vector3(i * width / chromosomeSize.x, 0, j * depth / chromosomeSize.y);
-                            float height = selectedTerrain.SampleHeight(pos);
+                            Vector3 pos = selectedTerrain.transform.position + new Vector3(width * i / chromosomeSize.x, 0, depth * j / chromosomeSize.y);
+                            pos += dPosition;
 
-                            GameObject g = Instantiate(m.prefab,pos + dPosition + Vector3.up*height,m.prefab.transform.rotation);
+                            float height = selectedTerrain.SampleHeight(pos) + UnityEngine.Random.Range(0, m.positionRandomRange.y);
+
+                            GameObject g = Instantiate(m.prefab,pos + Vector3.up*height,m.prefab.transform.rotation);
                             g.transform.Rotate(dRotation);
                             float dscale = UnityEngine.Random.Range(1, m.scaleRandomRange);
                             g.transform.localScale = new Vector3(g.transform.localScale.x * dscale, 
