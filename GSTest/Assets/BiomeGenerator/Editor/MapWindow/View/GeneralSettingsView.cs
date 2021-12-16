@@ -148,6 +148,11 @@ public class GeneralSettingsView : EditorPanel
             {
                 CurrentLayerIndex = Layers.FindIndex((p) => p.Controller.Label.Equals(SelectedLayer.Controller.Label));
             }
+            else if(Layers.Count > 0 && Layers[0] != null)
+            {
+                SelectedLayer = Layers[0];
+                CurrentLayerIndex = 0;
+            }
 
             if (CurrentLayerIndex >= 0 && CurrentLayerIndex < Layers.Count)
             {
@@ -182,7 +187,12 @@ public class GeneralSettingsView : EditorPanel
                 LayerSelectionoPanel p = (new LayerSelectionoPanel(Layers[i], i,
                     () => {
                         Layers.RemoveAt(i);
-                        if (i == CurrentLayerIndex) CurrentLayerIndex = -1;
+                        if (i == CurrentLayerIndex)
+                        {
+                            CurrentLayerIndex = -1;
+                            SelectedLayer = null;
+                        }
+                        
                     },
                     (PaintView pv) =>
                     {

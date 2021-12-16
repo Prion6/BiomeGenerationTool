@@ -83,7 +83,6 @@ public class MapWindow : EditorWindow
     public static int padding = 8;
 
     Stopwatch clock;
-    float refreshDelay = 3f;
     
 
     [MenuItem("Window/BiomeGenerator/2D Map View")]
@@ -251,22 +250,15 @@ public class MapWindow : EditorWindow
             }
 
         }
-        layers = generalSettingsView.Layers;
-        layerSettingsView.Update();
-        dispayOptionsView.Draw();
-        if (clock.ElapsedMilliseconds / 1000 > refreshDelay)
-        {
-            //UnityEngine.Debug.Log("reset");
-            clock.Reset();
-            clock.Start();
-        }
         else
         {
-            return;
+            layerSettingsView.SelectedLayer = null;
+            dispayOptionsView.SetSelectedLayer(null);
         }
-
-        
+        layers = generalSettingsView.Layers;
+        layerSettingsView.Update();
         dispayOptionsView.Update();
+        dispayOptionsView.Draw();
         //Debug.Log("Time: " + Time.time + " - Clock: " + clock.ElapsedMilliseconds);
     }
 
@@ -317,6 +309,7 @@ public class MapWindow : EditorWindow
                             if (UnityEngine.Random.value > density) continue;
                             foreach (MapElement m in p.Controller.mapElements)
                             {
+                                if (m == null) continue;
 
                                 r -= m.priority;
                         

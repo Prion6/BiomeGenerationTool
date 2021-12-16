@@ -19,15 +19,17 @@ public class LayerSettingsView : EditorPanel
 
     public void Update()
     {
+        //if (SelectedLayer == null) return;
         Draw();
     }
 
     public override void Draw()
     {
-        if (SelectedLayer == null) return;
 
 
         GUI.DrawTexture(Rect, Texture, ScaleMode.StretchToFill);
+
+        if (SelectedLayer == null) return;
         GUILayout.BeginArea(new Rect(Rect.x + MapWindow.padding, Rect.y + MapWindow.padding, Rect.width - MapWindow.padding * 2, Rect.height - MapWindow.padding * 2));
 
         GUILayout.Label("Layer Settings", EditorStyles.boldLabel);

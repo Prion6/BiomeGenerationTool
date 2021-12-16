@@ -10,6 +10,7 @@ using System.Diagnostics;
 public class DisplayOptionsView : EditorPanel
 {
     public PaintView SelectedLayer { get; set; }
+    PaintView prevLayer;
     public List<Tuple<string, LayerChromosome>> BestChromosomes;
     public List<Texture2D> BtnTextures;
 
@@ -46,7 +47,7 @@ public class DisplayOptionsView : EditorPanel
         }
     }
 
-    void CleanTExtures()
+    void CleanTextures()
     {
         for(int i = 0; i < BtnTextures.Count; i++)
         {
@@ -66,6 +67,13 @@ public class DisplayOptionsView : EditorPanel
         {
             if(isRunning && !pause)
             {
+                if(!prevLayer.Equals(SelectedLayer))
+                {
+                    CleanTextures();
+                    prevLayer.Controller.Stop();
+                    BestChromosomes.Clear();
+                    ResetCycle();
+                }
                 if (SelectedLayer.Controller.Waiting())
                 {
                     BestChromosomes.Clear();
@@ -83,6 +91,7 @@ public class DisplayOptionsView : EditorPanel
                 }
             }
         }
+        prevLayer = SelectedLayer;
         //UnityEngine.Debug.Log(timer.ElapsedMilliseconds/1000.0f);
     }
 
@@ -198,6 +207,7 @@ public class DisplayOptionsView : EditorPanel
             else
             {
                 isRunning = GUILayout.Button("RUN");
+                clock.Restart();
             }
         }
             
