@@ -64,8 +64,9 @@ public class ReachFairness : BaseFitnessFunction
 
         float avg = dists.Sum() / dists.Length;
         int max = dists.Max();
+        int n = MapWindow.StartPoints.Count * (MapWindow.StartPoints.Count - 1) / 2;
 
-        return (avg / max) * (1 - breaks * 1.0f / MapWindow.StartPoints.Count);
+        return (avg / max) * (1 - breaks * 1.0f / n);
     }
 
     // Start is called before the first frame update
