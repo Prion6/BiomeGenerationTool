@@ -18,6 +18,8 @@ public class StatGainFairness : BaseFitnessFunction
 
         bool hasStat = false;
 
+        float p = 0;
+
         foreach (MapElement m in c.Layer.mapElements)
         {
             foreach (BaseStat s in m.stats)
@@ -33,12 +35,20 @@ public class StatGainFairness : BaseFitnessFunction
 
         if (!hasStat)
         {
-            return 1;
+            if (UseData.IsDummy)
+            {
+                return p;
+            }
+            return 1 - p;
         }
 
         if (MapWindow.StartPoints.Count == 0)
         {
-            return 0;
+            if (UseData.IsDummy)
+            {
+                return 1 - p;
+            }
+            return p;
         }
 
         float maxDistance = 0;
@@ -84,19 +94,15 @@ public class StatGainFairness : BaseFitnessFunction
         }
 
         avg /= vals.Count;
+        p = (avg / max) * (avgDist / maxDistance);
 
-        return (avg / max)*(avgDist/maxDistance);
+        p = p > float.NaN ? 0 : p;
+
+        if(UseData.IsDummy)
+        {
+            return 1 - p;
+        }
+        return p;
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

@@ -15,6 +15,9 @@ public class ReachFairness : BaseFitnessFunction
         LayerChromosome c = chromosome as LayerChromosome;
         float[] genes = c.GetRawData();
         bool hasCollider = false;
+
+        float p = 1;
+
         foreach (MapElement m in c.Layer.mapElements)
         {
             if (m == null) continue;
@@ -32,12 +35,22 @@ public class ReachFairness : BaseFitnessFunction
 
         if (!hasCollider)
         {
-            return 1;
+            if (UseData.IsDummy)
+            {
+                return 1 - p;
+
+            }
+            return p;
         }
 
         if (MapWindow.StartPoints.Count == 0)
         {
-            return 1;
+            if (UseData.IsDummy)
+            {
+                return 1 - p;
+
+            }
+            return p;
         }
 
         int[] dists = new int[MapWindow.StartPoints.Count];
@@ -66,18 +79,15 @@ public class ReachFairness : BaseFitnessFunction
         int max = dists.Max();
         int n = MapWindow.StartPoints.Count * (MapWindow.StartPoints.Count - 1) / 2;
 
-        return (avg / max) * (1 - breaks * 1.0f / n);
-    }
+        p = (avg / max) * (1 - breaks * 1.0f / n);
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+        p = p > float.NaN ? 0 : p;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (UseData.IsDummy)
+        {
+            return 1 - p;
+
+        }
+        return p;
     }
 }

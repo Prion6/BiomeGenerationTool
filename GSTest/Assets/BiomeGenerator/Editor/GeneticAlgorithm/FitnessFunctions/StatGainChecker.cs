@@ -14,6 +14,18 @@ public class StatGainChecker : BaseFitnessFunction
         float totalChance = 0;
         float acummulatedChance = 0;
 
+        float p = 0;
+
+        if(c.Layer.mapElements.Count == 0)
+        {
+            if (UseData.IsDummy)
+            {
+                return 1 - p;
+
+            }
+            return p;
+        }
+
         foreach(MapElement m in c.Layer.mapElements)
         {
             totalChance += m.priority;
@@ -27,11 +39,26 @@ public class StatGainChecker : BaseFitnessFunction
             }
         }
 
+        if(acummulatedChance == 0)
+        {
+            if (UseData.IsDummy)
+            {
+                return 1 - p;
+
+            }
+            return p;
+        }
+
         float pixelChance = acummulatedChance / totalChance;
 
         if (pixelChance == float.NaN || pixelChance == 0)
         {
-            return 0;
+            if (UseData.IsDummy)
+            {
+                return 1 - p;
+
+            }
+            return p;
         }
 
         float acummulatedPixelVal = 0;
@@ -43,7 +70,15 @@ public class StatGainChecker : BaseFitnessFunction
             acummulatedPixelVal += arr[i];
         }
 
+        p = (pixelChance * acummulatedPixelVal) / (c.Length * 1.0f);
+        p = (p == float.NaN) ? 0 : p;
 
-        return (pixelChance * acummulatedPixelVal) / (c.Length*1.0f);
+        if (UseData.IsDummy)
+        {
+            return 1 - p;
+
+        }
+        return p;
+
     }
 }

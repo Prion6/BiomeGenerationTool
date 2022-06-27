@@ -18,7 +18,11 @@ public class TerrainSelection : EditorPanel
 
         GUILayout.BeginArea(new Rect(Rect.x + MapWindow.padding, Rect.y + MapWindow.padding, Rect.width - MapWindow.padding * 2, Rect.height - MapWindow.padding * 2));
         //GUILayout.BeginArea(Rect);
-        if(Terrain == null && Selection.objects.Length > 0)
+
+        GUILayout.Label("Desktop Code: " + UseData.GetCode());
+
+        EditorGUILayout.Space();
+        if (Terrain == null && Selection.objects.Length > 0)
         {
             if (Selection.objects[0] is GameObject)
             {
@@ -36,7 +40,11 @@ public class TerrainSelection : EditorPanel
         if(GUILayout.Button("Select terrain") && Terrain != null)
         {
             OnSelectterrain?.Invoke(Terrain);
+            UseData.StartClock();
         }
+
+        EditorGUILayout.Space();
+        GUILayout.Label("Desktop Code: " + UseData.GetCode());
         GUILayout.EndArea();
     }
 

@@ -69,5 +69,3 @@ crashlytics-build.properties
 
 "Temp/*" 
 "Library/*" 
-"SafariRushApp/Library/*" 
-"SafariRushApp/Temp/*" 

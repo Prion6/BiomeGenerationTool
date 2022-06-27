@@ -6,11 +6,11 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ProceduralGeneration/PerlinNoiseDistortion")]
 public class PerlinNoiseDistortion : ScriptableObject, INoiseGenerator
 {
-    [Range(0.00001f,2)]
+    [Range(0.00001f, 2)]
     public float alphaAmplitude;
-    [Range(1,16)]
+    [Range(1, 16)]
     public int octaves;
-    [Range(1,400)]
+    [Range(1, 400)]
     public float amplitude;
     [Range(0, 128)]
     public int OffsetX;
@@ -29,7 +29,8 @@ public class PerlinNoiseDistortion : ScriptableObject, INoiseGenerator
 
     public PerlinNoise perlin;
     float[] PerlinNoise;
-    public int PerlinSize;
+    public int PerlinSize => NoiseData.PerlinSize;
+
 
     /*private void Awake()
     {
@@ -43,11 +44,13 @@ public class PerlinNoiseDistortion : ScriptableObject, INoiseGenerator
         MapWindow.Perlin = PerlinNoise;
     }*/
 
+    
     public float[] Init()
     {
-        PerlinNoise = perlin.GenerateNoiseMap(PerlinSize, 1);
+        PerlinNoise = NoiseData.GetPerlinNoise();
         return PerlinNoise;
     }
+
 
     // Arbitrary numbers to break up visible correlation between octaves / x & y
     //public Vector2 seed = new Vector2(-71, 37);
@@ -126,7 +129,7 @@ public class PerlinNoiseDistortion : ScriptableObject, INoiseGenerator
         //int c = 0;
 
 
-
+        //
         for (int j = 0; j < height; j++)
         {
             for (int i = 0; i < height; i++)
@@ -148,10 +151,13 @@ public class PerlinNoiseDistortion : ScriptableObject, INoiseGenerator
         return outputData;
     }
 
+
     public float[] Smooth(float[] inputData, int width, int height)
     {
+        
+
         float[] outputData = new float[inputData.Length];
-        int[] dirs = { 1, width + 1, width, width - 1, -1, -width -1, -width, -width + 1};
+        int[] dirs = { 1, width + 1, width, width - 1, -1, -width - 1, -width, -width + 1 };
 
         float inputMax = 0;
         float outputMax = 0;
@@ -163,21 +169,21 @@ public class PerlinNoiseDistortion : ScriptableObject, INoiseGenerator
                 for (int i = 0; i < width; i++)
                 {
                     float val = inputData[j * width + i];
-                    if(val > inputMax)
+                    if (val > inputMax)
                     {
                         inputMax = val;
                     }
                     int dots = 1;
-                        foreach (int k in dirs)
+                    foreach (int k in dirs)
+                    {
+                        if ((j * width + i) + k < 0 || (j * width + i) + k > inputData.Length - 1)
                         {
-                            if ((j * width + i) + k < 0 || (j * width + i) + k > inputData.Length - 1)
-                            {
-                                continue;
-                            }
-                            dots++;
-                            val += inputData[(j * width + i) + k];
+                            continue;
                         }
-                    outputData[j * width + i] = ((val/dots));
+                        dots++;
+                        val += inputData[(j * width + i) + k];
+                    }
+                    outputData[j * width + i] = ((val / dots));
                     if (l == octaves - 1 && outputData[j * width + i] > outputMax)
                     {
                         outputMax = outputData[j * width + i];

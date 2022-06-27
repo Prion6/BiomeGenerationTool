@@ -14,7 +14,7 @@ public class DisplayOptionsView : EditorPanel
     public List<Tuple<string, LayerChromosome>> BestChromosomes;
     public List<Texture2D> BtnTextures;
 
-    bool isRunning;
+    bool isRunning = false;
     bool IsRunning {
         get
         {
@@ -25,8 +25,12 @@ public class DisplayOptionsView : EditorPanel
             {
                 SelectedLayer.Controller.Stop();
             }
-            ResetCycle();
+            else if(!isRunning && value && SelectedLayer != null)
+            {
+                ResetCycle();
+            }
             isRunning = value;
+            UseData.IsRunning(isRunning);
         } }
     Stopwatch clock;
 
@@ -41,6 +45,7 @@ public class DisplayOptionsView : EditorPanel
         clock = new Stopwatch();
         scrollPosition = Vector2.zero;
         BtnTextures = new List<Texture2D>();
+        prevLayer = SelectedLayer;
         for(int i = 0; i < LayerController.maxGA; i++)
         {
             BtnTextures.Add(new Texture2D(128,128));
@@ -67,21 +72,26 @@ public class DisplayOptionsView : EditorPanel
         {
             if(isRunning && !pause)
             {
-                if(!prevLayer.Equals(SelectedLayer))
+                if(!SelectedLayer.Equals(prevLayer))
                 {
+                    isRunning = false;
                     CleanTextures();
                     prevLayer.Controller.Stop();
                     BestChromosomes.Clear();
+                    for (int i = 0; i < BtnTextures.Count; i++)
+                    {
+                        SelectedLayer.Controller.BaseChromosome.Paint(BtnTextures[i], SelectedLayer.Controller.Color);
+                    }
                     ResetCycle();
                 }
-                if (SelectedLayer.Controller.Waiting())
+                else if (SelectedLayer.Controller.Waiting())
                 {
                     BestChromosomes.Clear();
                     foreach (RunningGa ga in SelectedLayer.Controller.GeneticAlgorithms)
                     {
                         if (ga.GA == null) continue;
                         if (ga.GA.BestChromosome == null) continue;
-                        BestChromosomes.Add(Tuple.Create(ga.FitnessFunction.label, ga.GA.BestChromosome as LayerChromosome));
+                        BestChromosomes.Add(Tuple.Create(ga.FitnessFunction.name, ga.GA.BestChromosome as LayerChromosome));
                     }
                     for (int i = 0; i < BestChromosomes.Count; i++)
                     {
@@ -135,7 +145,10 @@ public class DisplayOptionsView : EditorPanel
                     if (GUILayout.Button(BtnTextures[i], GUILayout.Width(BtnTextures[i].width), GUILayout.Height(BtnTextures[i].height)))
                     {
                         if (i < BestChromosomes.Count)
+                        {
                             ReplaceLayerChromosome(BestChromosomes[i].Item2 as LayerChromosome);
+                            UseData.RegisterSuggestionUse();
+                        }
                     }
                     if (i < BestChromosomes.Count)
                     {
@@ -146,7 +159,7 @@ public class DisplayOptionsView : EditorPanel
                         GUILayout.Label("");
                     }
                     EditorGUILayout.EndVertical();
-                    EditorGUILayout.Space();
+                    //EditorGUILayout.Space();
                     #endregion
 
                     #region Second Button
@@ -161,7 +174,10 @@ public class DisplayOptionsView : EditorPanel
                         if (GUILayout.Button(BtnTextures[i + 1], GUILayout.Width(BtnTextures[i + 1].width), GUILayout.Height(BtnTextures[i + 1].height)))
                         {
                             if (i + 1 < BestChromosomes.Count)
+                            {
                                 ReplaceLayerChromosome(BestChromosomes[i + 1].Item2 as LayerChromosome);
+                                UseData.RegisterSuggestionUse();
+                            }
                         }
                         if (i + 1 < BestChromosomes.Count)
                         {
@@ -206,8 +222,14 @@ public class DisplayOptionsView : EditorPanel
             }
             else
             {
-                isRunning = GUILayout.Button("RUN");
-                clock.Restart();
+                if (GUILayout.Button("RUN"))
+                {
+                    isRunning = true;
+                    foreach(RunningGa ga in SelectedLayer.Controller.GeneticAlgorithms)
+                    {
+                        UseData.AddGa(ga.FitnessFunction.name);
+                    }
+                }
             }
         }
             

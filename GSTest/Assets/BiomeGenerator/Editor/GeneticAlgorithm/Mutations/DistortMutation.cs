@@ -51,6 +51,10 @@ public class DistortMutation : MutationBase
             for (int i = 0; i < sN; i++)
             {
                 float pond = Mathf.Clamp01(MathTools.Distance(xC, yC, x + i, y + j) / dist);
+                if (UseData.IsDummy)
+                {
+                    pond = 1 - pond;
+                }
                 float val = (genes[(y + j) * c.N + (x + i)] * pond) + (mult*data[j * sN + i] * (1 - pond));
                 c.SetGene((x + i), (y + j), val);
             }

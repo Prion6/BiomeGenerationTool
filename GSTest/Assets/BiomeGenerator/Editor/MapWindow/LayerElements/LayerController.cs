@@ -71,6 +71,8 @@ public class LayerController : ScriptableObject
     {
         if (GeneticAlgorithms.Count >= maxGA) return;
         GeneticAlgorithms.Add(CreateNewGA(fitnessFunction));
+        //Debug.Log("FF1: " + fitnessFunction.name);
+        //UseData.AddGa(fitnessFunction.name);
     }
 
     public void RemoveGA(int index)
@@ -163,12 +165,15 @@ public class RunningGa
     public Thread Thread;
 
     public BaseFitnessFunction FitnessFunction;
+    private BaseFitnessFunction prevFF = null;
 
     public RunningGa(GeneticAlgorithm ga, Thread thread, BaseFitnessFunction fitnessFunction)
     {
         GA = ga;
         Thread = thread;
         FitnessFunction = fitnessFunction;
+        //Debug.Log("FF2: " + fitnessFunction.name);
+        //UseData.AddGa(FitnessFunction.name);
     }
 
     public void Init(IChromosome BaseChromosome, float LifeCycle, INoiseGenerator noiseGenerator)
@@ -176,6 +181,11 @@ public class RunningGa
         if (FitnessFunction == null) return;
         if (Thread != null && Thread.IsAlive)
             Thread.Abort();
+        if(prevFF == null || !prevFF.Equals(FitnessFunction))
+        {
+            prevFF = FitnessFunction;
+            UseData.AddGa(FitnessFunction.name);
+        }
         
         /*var crossover = new AreaCrossover(0.03125f);
         var mutation = new InsertionMutation();
@@ -203,13 +213,14 @@ public class RunningGa
         });
         
         Thread.Start();
+
     }
 
     void GAInit(IChromosome BaseChromosome, float LifeCycle, INoiseGenerator noiseGenerator)
     {
-        var crossover = new AreaCrossover(0.5f);
+        var crossover = new AreaCrossover(0.65f);
         //var mutation = new InsertionMutation();
-        var mutation = new MultipleOptionMutation(0.25f);
+        var mutation = new MultipleOptionMutation(0.4f);
         var selection = new EliteSelection();
         var population = new Population(8, 8, BaseChromosome);
 

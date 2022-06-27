@@ -62,7 +62,13 @@ public class Coherency : BaseFitnessFunction
         {
             Debug.Log("WHAT?: " + incoherency);
         }*/
-        return 2*(0.5 - incoherency);
+        incoherency = incoherency > float.NaN ? 0 : incoherency;
+        
+        if (UseData.IsDummy)
+        {
+            return incoherency;
+        }
+        return 1 - incoherency;
         //return (1.0f/(1.0f + incoherency));
     }
 }

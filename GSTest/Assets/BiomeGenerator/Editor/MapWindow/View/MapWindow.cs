@@ -8,6 +8,17 @@ using System;
 
 public class MapWindow : EditorWindow
 {
+    private static MapWindow _Instance;
+    public static MapWindow Instance {
+        get
+        {
+            if(_Instance == null)
+            {
+                _Instance = GetWindow<MapWindow>("2D Map View");
+            }
+            return _Instance;
+        }
+    }
     public static Rect PaintArea;
     Texture2D PaintAreaBackground;
     GeneralSettingsView generalSettingsView;
@@ -70,7 +81,7 @@ public class MapWindow : EditorWindow
         get {
             if (_PerlinNoise == null)
             {
-                _PerlinNoise = pnd.Init();
+                _PerlinNoise = NoiseData.GetPerlinNoise();
             }
             return _PerlinNoise;
         }
@@ -84,14 +95,14 @@ public class MapWindow : EditorWindow
 
     Stopwatch clock;
     
-
+    /*
     [MenuItem("Window/BiomeGenerator/2D Map View")]
     public static void ShowWindow()
     {
-        var window = GetWindow<MapWindow>("2D Map View");
-        window.minSize = new Vector2(512,512);
-        window.maxSize = new Vector2(1120, 710);
-    }
+        Instance.Show();
+        Instance.minSize = new Vector2(512,512);
+        Instance.maxSize = new Vector2(1120, 710);
+    }*/
 
     private void OnEnable()
     {
@@ -206,11 +217,11 @@ public class MapWindow : EditorWindow
                     hasChanged = true;
                     if (Event.current.button == 0)
                     {
-                        generalSettingsView.GetCurrentLayer().Paint((int)pos.x, 512 - (int)pos.y, true, drawingSettings.Intensity, drawingSettings.BrushSize, drawingSettings.Acumulative);
+                        generalSettingsView.GetCurrentLayer().Paint((int)pos.x, 512 - (int)pos.y, true, drawingSettings.Density, drawingSettings.BrushSize, drawingSettings.Acumulative);
                     }
                     else if (Event.current.button == 1)
                     {
-                        generalSettingsView.GetCurrentLayer().Paint((int)pos.x, 512 - (int)pos.y, false, drawingSettings.Intensity, drawingSettings.BrushSize, drawingSettings.Acumulative);
+                        generalSettingsView.GetCurrentLayer().Paint((int)pos.x, 512 - (int)pos.y, false, 1-drawingSettings.Density, drawingSettings.BrushSize, drawingSettings.Acumulative);
                     }
                     //Repaint();
                 }
@@ -267,7 +278,7 @@ public class MapWindow : EditorWindow
         float width = (int)selectedTerrain.terrainData.bounds.size.x;
         float depth = (int)selectedTerrain.terrainData.bounds.size.z;
 
-        float density = drawingSettings.Density;
+        float density = drawingSettings.Concentration;
         if (density <= 0) return;
 
         foreach (PaintView p in generalSettingsView.Layers)
@@ -343,6 +354,7 @@ public class MapWindow : EditorWindow
                     }
                 }
             }
+            UseData.RegisterMapCreation();
         }
     }
 
@@ -350,5 +362,31 @@ public class MapWindow : EditorWindow
     {
         if(layerSettingsView.SelectedLayer != null)
             DestroyImmediate(layerSettingsView.SelectedLayer);
+        UseData.StopClock();
+        UseData.Save();
+    }
+}
+
+public class BMG
+{
+    private static MapWindow _Instance;
+    public static MapWindow Instance
+    {
+        get
+        {
+            if(_Instance == null)
+            {
+                _Instance = EditorWindow.GetWindow<MapWindow>("Biome Generator");
+            }
+            return _Instance;
+        }
+    }
+
+    [MenuItem("Window/BiomeGenerator")]
+    public static void ShowWindow()
+    {
+        Instance.Show();
+        Instance.minSize = new Vector2(512, 512);
+        Instance.maxSize = new Vector2(1120, 710);
     }
 }

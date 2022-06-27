@@ -15,7 +15,6 @@ public class ResemblanceFitness : BaseFitnessFunction
         //var c = chromosome as LayerChromosome;
 
         float distance = 0;
-        
 
         for (int x = 0; x < chromosome.Length; x++)
         {
@@ -24,6 +23,10 @@ public class ResemblanceFitness : BaseFitnessFunction
 
         distance /= chromosome.Length;
 
+        if(UseData.IsDummy)
+        {
+            return distance;
+        }
         return (1 - distance);
     }
 }

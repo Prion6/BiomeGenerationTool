@@ -13,6 +13,9 @@ public class Conectivity : BaseFitnessFunction
     {
         LayerChromosome c = chromosome as LayerChromosome;
         bool hasCollider = false;
+
+        float p = 1;
+
         foreach(MapElement m in c.Layer.mapElements)
         {
             foreach (BaseStat s in m.stats)
@@ -34,7 +37,7 @@ public class Conectivity : BaseFitnessFunction
         bool[] Closed = new bool[chromosome.Length];
 
         float val = 0;
-        int breaks = 0;
+        int breaks = -1;
 
         if (MapWindow.StartPoints.Count == 0)
         {
@@ -50,18 +53,15 @@ public class Conectivity : BaseFitnessFunction
             val += FloodFIll.NodeCount(t, (chromosome as LayerChromosome).GetRawData(), (chromosome as LayerChromosome).N, Closed,0,0);
         }
 
-        return (val/chromosome.Length*1.0f)*(1 - breaks*1.0f/ MapWindow.StartPoints.Count);
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+        p = (val / chromosome.Length * 1.0f) * (1 - breaks * 1.0f / MapWindow.StartPoints.Count);
+        p = p == float.NaN ? 0 : p;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (UseData.IsDummy)
+        {
+            return 1 - p;
+
+        }
+        return p;
     }
 }

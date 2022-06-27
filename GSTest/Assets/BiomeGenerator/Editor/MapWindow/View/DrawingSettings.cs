@@ -6,8 +6,9 @@ using UnityEditor;
 public class DrawingSettings : EditorPanel
 {
     public int BrushSize { get; protected set; }
-    public float Intensity { get; protected set; }
     public float Density { get; protected set; }
+    [HideInInspector]
+    public float Concentration = 0.35f;
     public bool Acumulative { get; protected set; }
     public bool paintPoints { get; protected set; }
 
@@ -15,9 +16,8 @@ public class DrawingSettings : EditorPanel
 
     public DrawingSettings(int x, int y, int width, int height) : base(x, y, width, height)
     {
-        Density = 1;
         BrushSize = 10;
-        Intensity = 0.5f;
+        Density = 0.5f;
         paintPoints = true;
     }
 
@@ -38,7 +38,7 @@ public class DrawingSettings : EditorPanel
 
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Intensity\t");
-        Intensity = EditorGUILayout.Slider(Intensity, 0, 1);
+        Density = EditorGUILayout.Slider(Density, 0, 1);
         EditorGUILayout.EndHorizontal();
 
 
@@ -48,11 +48,6 @@ public class DrawingSettings : EditorPanel
         EditorGUILayout.Space();
         GUILayout.Label("Generate Elements On Map\t");
         EditorGUILayout.Space();
-
-        EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("Density\t");
-        Density = EditorGUILayout.Slider(Density, 0, 1);
-        EditorGUILayout.EndHorizontal();
 
         MapWindow.Terrain = EditorGUILayout.ObjectField("Terrain: ", MapWindow.Terrain, typeof(Terrain), true) as Terrain;
 
