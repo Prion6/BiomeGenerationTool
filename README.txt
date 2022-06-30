@@ -39,3 +39,6 @@ La herramienta no tiene sistema de guardado. Si cierra la ventana perderá
 su avance.
 La herramienta funciona en Editor si presiona el botón de Play de Unity perderá 
 su avance.
+
+En casos de uso más avanzados el usuario puede crear sus propios MapElements o 
+Fitness Functions.
