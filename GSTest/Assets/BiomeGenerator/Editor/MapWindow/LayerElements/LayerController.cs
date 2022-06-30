@@ -146,7 +146,12 @@ public class LayerController : ScriptableObject
             return 0;
         }
         float totalChance = mapElements.Sum((m) => m.priority);
-        float chance = ((1.0f * mapElement.priority) / (1.0f * totalChance));
+
+        float chance = (1.0f * mapElement.priority);
+        if(totalChance != 0)
+        {
+            chance = ((1.0f * mapElement.priority) / (1.0f * totalChance));
+        }
         if (chance == 0 && mapElement.priority != 0)
         {
             Debug.LogError("Error Normalized Priority");
@@ -218,6 +223,10 @@ public class RunningGa
 
     void GAInit(IChromosome BaseChromosome, float LifeCycle, INoiseGenerator noiseGenerator)
     {
+        /*if(FitnessFunction == null)
+        {
+            return;
+        }*/
         var crossover = new AreaCrossover(0.65f);
         //var mutation = new InsertionMutation();
         var mutation = new MultipleOptionMutation(0.4f);

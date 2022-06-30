@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEditor;
 using UnityEditor.UI;
 using System;
+using System.Linq;
 using System.Diagnostics;
 
 public class DisplayOptionsView : EditorPanel
@@ -68,7 +69,7 @@ public class DisplayOptionsView : EditorPanel
     ///- Dividir el proceso en Selectedlayer.Controller.geneticAlgorithms.Count frames
     public void Update()
     {
-        if (SelectedLayer != null)
+        if (SelectedLayer != null && SelectedLayer.Controller.GeneticAlgorithms.Count > 0)
         {
             if(isRunning && !pause)
             {
@@ -90,6 +91,7 @@ public class DisplayOptionsView : EditorPanel
                     foreach (RunningGa ga in SelectedLayer.Controller.GeneticAlgorithms)
                     {
                         if (ga.GA == null) continue;
+                        //if (ga.FitnessFunction == null) continue;
                         if (ga.GA.BestChromosome == null) continue;
                         BestChromosomes.Add(Tuple.Create(ga.FitnessFunction.name, ga.GA.BestChromosome as LayerChromosome));
                     }
@@ -224,10 +226,17 @@ public class DisplayOptionsView : EditorPanel
             {
                 if (GUILayout.Button("RUN"))
                 {
+                    if (SelectedLayer.Controller.GeneticAlgorithms.Where((g) => g == null || g.FitnessFunction == null).Count() > 0 || SelectedLayer.Controller.GeneticAlgorithms.Count == 0)
+                    {
+                        return;
+                    }
                     isRunning = true;
                     foreach(RunningGa ga in SelectedLayer.Controller.GeneticAlgorithms)
                     {
-                        UseData.AddGa(ga.FitnessFunction.name);
+                        if(ga != null && ga.FitnessFunction != null)
+                        {
+                            UseData.AddGa(ga.FitnessFunction.name);
+                        }
                     }
                 }
             }

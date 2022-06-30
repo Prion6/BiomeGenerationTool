@@ -20,6 +20,15 @@ public class StatGainFairness : BaseFitnessFunction
 
         float p = 0;
 
+        if(c.Layer.mapElements.Count == 0)
+        {
+            if (UseData.IsDummy)
+            {
+                return 1 - p;
+            }
+            return p;
+        }
+
         foreach (MapElement m in c.Layer.mapElements)
         {
             foreach (BaseStat s in m.stats)
@@ -79,7 +88,10 @@ public class StatGainFairness : BaseFitnessFunction
             int yU = (int)(t1.Item2 + maxDistance / 2 > c.N ? c.N : t1.Item2 + maxDistance / 2);
             vals.Add(FloodFIll.ValCount(t1, data, c.N, Closed, 0, 1, xL, xR, yB, yU));
         }
-        avgDist /= counter;
+        if(counter == 0)
+        {
+            avgDist /= counter;
+        }
 
         float max = 0;
         float avg = 0;
@@ -92,11 +104,16 @@ public class StatGainFairness : BaseFitnessFunction
                 max = f;
             }
         }
+        if(vals.Count != 0)
+        {
+            avg /= vals.Count;
+        }
+        if(max != 0 && maxDistance != 0)
+        {
+            p = (avg / max) * (avgDist / maxDistance);
+        }
 
-        avg /= vals.Count;
-        p = (avg / max) * (avgDist / maxDistance);
-
-        p = p > float.NaN ? 0 : p;
+        p = p == float.NaN ? 0 : p;
 
         if(UseData.IsDummy)
         {

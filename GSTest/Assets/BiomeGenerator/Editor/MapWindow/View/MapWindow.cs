@@ -286,6 +286,10 @@ public class MapWindow : EditorWindow
             float addedOdds = 0;
             foreach (MapElement m in p.Controller.mapElements)
             {
+                if(m == null || m.prefab == null)
+                {
+                    continue;
+                }
                 addedOdds += m.priority;
             }
             if (addedOdds == 0) continue;
@@ -320,7 +324,7 @@ public class MapWindow : EditorWindow
                             if (UnityEngine.Random.value > density) continue;
                             foreach (MapElement m in p.Controller.mapElements)
                             {
-                                if (m == null) continue;
+                                if (m == null || m.prefab == null) continue;
 
                                 r -= m.priority;
                         

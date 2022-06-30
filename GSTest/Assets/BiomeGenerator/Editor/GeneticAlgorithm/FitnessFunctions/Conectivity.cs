@@ -16,6 +16,16 @@ public class Conectivity : BaseFitnessFunction
 
         float p = 1;
 
+        if(c.Layer.mapElements.Count == 0)
+        {
+            if (UseData.IsDummy)
+            {
+                return 1 - p;
+
+            }
+            return p;
+        }
+
         foreach(MapElement m in c.Layer.mapElements)
         {
             foreach (BaseStat s in m.stats)
@@ -53,8 +63,10 @@ public class Conectivity : BaseFitnessFunction
             val += FloodFIll.NodeCount(t, (chromosome as LayerChromosome).GetRawData(), (chromosome as LayerChromosome).N, Closed,0,0);
         }
 
-
-        p = (val / chromosome.Length * 1.0f) * (1 - breaks * 1.0f / MapWindow.StartPoints.Count);
+        if(chromosome.Length != 0 && MapWindow.StartPoints.Count != 0)
+        {
+            p = (val / chromosome.Length * 1.0f) * (1 - breaks * 1.0f / MapWindow.StartPoints.Count);
+        }
         p = p == float.NaN ? 0 : p;
 
         if (UseData.IsDummy)

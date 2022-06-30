@@ -18,6 +18,16 @@ public class ReachFairness : BaseFitnessFunction
 
         float p = 1;
 
+        if (c.Layer.mapElements.Count == 0)
+        {
+            if (UseData.IsDummy)
+            {
+                return 1 - p;
+
+            }
+            return p;
+        }
+
         foreach (MapElement m in c.Layer.mapElements)
         {
             if (m == null) continue;
@@ -74,14 +84,20 @@ public class ReachFairness : BaseFitnessFunction
             dists[i] = dist;
             i++;
         }
-
-        float avg = dists.Sum() / dists.Length;
+        float avg = 0;
+        if(dists.Length != 0)
+        {
+            avg = dists.Sum() / dists.Length;
+        }
         int max = dists.Max();
         int n = MapWindow.StartPoints.Count * (MapWindow.StartPoints.Count - 1) / 2;
 
-        p = (avg / max) * (1 - breaks * 1.0f / n);
+        if(max != 0 && n != 0)
+        {
+            p = (avg / max) * (1 - breaks * 1.0f / n);
+        }
 
-        p = p > float.NaN ? 0 : p;
+        p = p == float.NaN ? 0 : p;
 
         if (UseData.IsDummy)
         {

@@ -15,6 +15,15 @@ public class Coherency : BaseFitnessFunction
         LayerChromosome[] layerChromosomes = MapWindow.layers.Select((l) => l.Controller.BaseChromosome).ToArray();
         float incoherency = 0;
 
+        if(c.Layer.mapElements.Count == 0)
+        {
+            if (UseData.IsDummy)
+            {
+                return incoherency;
+            }
+            return 1 - incoherency;
+        }    
+
         foreach(MapElement m in c.Layer.mapElements)
         {
             float chance = c.Layer.NormalizedPriority(m);
@@ -32,7 +41,10 @@ public class Coherency : BaseFitnessFunction
 
                     if(!stats.Contains(r.label))
                     {
-                        lcIncoherency = r.lack ? 0 : (genes.Sum()/ genes.Length);
+                        if (genes.Length != 0)
+                        {
+                            lcIncoherency = r.lack ? 0 : (genes.Sum() / genes.Length);
+                        }
                     }
                     else
                     {
@@ -46,7 +58,10 @@ public class Coherency : BaseFitnessFunction
                                 lcIncoherency += genes[i];
                             }
                         }
-                        lcIncoherency /= genes.Length;
+                        if(genes.Length != 0)
+                        {
+                            lcIncoherency /= genes.Length;
+                        }
                     }
 
                     if(rIncoherency > lcIncoherency)
@@ -56,13 +71,16 @@ public class Coherency : BaseFitnessFunction
                 }
                 mIncoherency += rIncoherency;
             }
-            incoherency += (mIncoherency/m.requirements.Count)*chance;
+            if(m.requirements.Count != 0)
+            {
+                incoherency += (mIncoherency / m.requirements.Count) * chance;
+            }
         }
         /*if(incoherency < 0)
         {
             Debug.Log("WHAT?: " + incoherency);
         }*/
-        incoherency = incoherency > float.NaN ? 0 : incoherency;
+        incoherency = incoherency == float.NaN ? 0 : incoherency;
         
         if (UseData.IsDummy)
         {
