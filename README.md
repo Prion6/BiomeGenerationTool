@@ -15,7 +15,7 @@ Select the desired Unity terrain from the Scene or the selection box and press t
 
 To add a layer, deploy ***GeneralSettings -> Layers*** and press the ***+*** button. The ***X*** button deletes the layer and the ***O*** selects the layer. The toggle button sets the layer's visibility.
 
-To paint, left click and drag over the * *Draw Area Panel* * . To erase, right click and drag over the * *Draw Area Panel* * . ***Intensity*** on the * *Draw Setting Panel* * indicates the element density in the painted zone. Painting and erasing increase and decrease density respectively, up to the intenisty value.  
+To paint, left click and drag over the *Draw Area Panel*. To erase, right click and drag over the *Draw Area Panel*. ***Intensity*** on the *Draw Setting Panel* indicates the element density in the painted zone. Painting and erasing increase and decrease density respectively, up to the intenisty value.  
 
 
 Add elements to ***LayerSettings -> MapElements*** to select elements to populate each layer. Sample assets can be found in ***Assets -> MapElements***.
@@ -28,6 +28,6 @@ Press ***DrawSettings -> Generate*** to generate the 3D map.
 
 ## Caveats 
 
-- BGT doesn't have an ***undo*** feature.
-- BGT doesn't have a ***save*** feature. If you close the window, you will lose your work.
+- BGT doesn't have an ***Undo*** feature.
+- BGT doesn't have a ***Save*** feature. If you close the window, you will lose your work.
 - BGT only works in the Editor, if you press ***Play*** you will lose your work.
