@@ -4,8 +4,8 @@
 - Clone this repository.
 - Open the project on Unity 2019.4.x
 - To access the tool:
-  - Select ***Assets -> Maps -> SampleScene1*** by double clicking it on the * *Project* * tab.
-  - Double-click ***Terrain** on the * *Hierarchy* * tab.
+  - Select ***Assets -> Maps -> SampleScene1*** by double clicking it on the *Project* tab.
+  - Double-click ***Terrain*** on the *Hierarchy* tab.
   - Click on ***Window -> BiomeGenerator***
   - If you get a black window, just increase its size by dragging the lower right corner.
 
