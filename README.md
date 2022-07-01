@@ -20,7 +20,7 @@ To paint, left click and drag over the *Draw Area Panel*. To erase, right click 
 
 Add elements to ***LayerSettings -> MapElements*** to select elements to populate each layer. Sample assets can be found in ***Assets -> MapElements***.
 
-Add elements to ***LayerSettings>FitnessFunctions*** to select fitness functions to target when providing suggestions. There is a limit of 8 functions per layer.
+Add elements to ***LayerSettings -> FitnessFunctions*** to select fitness functions to target when providing suggestions. There is a limit of 8 functions per layer.
 
 Press ***DisplayOptions -> RUN*** to start generating suggestions. clicking on a suggestion will replace your current map.
 
