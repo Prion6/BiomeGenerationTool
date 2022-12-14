@@ -26,6 +26,29 @@ Press ***DisplayOptions -> RUN*** to start generating suggestions. clicking on a
 
 Press ***DrawSettings -> Generate*** to generate the 3D map.
 
+# Basic Biome Testing Kit
+
+The Biome Testing Kit has a group of objects marked with tags to define what properties it should provide (P) to the environment or require (R) from it. These tags are used by the AI to help the designer in the map creation process. The following table list the objects and tags present in the kit and their association. A P mark what the objects provides, R+ marks if the object require the pressence of the stat and R- if it requires it absence. Objects and tags can be modified by the user at will.
+
+|:---:                |:---:  |:---:   |:---:    |:---:     |:---:       |:---:      |:---:   |:---:    |:---:   |:---:     |:---:     |:---:    |:---:         |
+|                     |**Pet**|**Food**|**Shell**|**Danger**|**Collider**|**Mineral**|**Rock**|**Magic**|**Wood**|**Leaves**|**Shadow**|**Grass**|**Decorative**|  
+|**Cat**              |P      |        |         |          |            |           |        |         |        |          |R+        |         |              |
+|**Chicken**          |       |P       |         |          |            |           |        |         |        |          |          |R+       |              |
+|**Crab**             |       |P       |P        |P         |            |           |R+      |         |        |          |          |         |              |
+|**Dog**              |P      |        |         |          |            |           |        |         |        |          |          |         |              |
+|**Lion**             |       |P       |         |P         |            |           |        |         |        |          |R+        |R+       |              |
+|**Penguin**          |P      |        |         |          |            |           |        |R+       |        |          |          |         |              |
+|**Mineral 1 - 12**   |       |        |         |          |P           |P          |P       |         |R-      |          |          |         |              |
+|**Mineral 13**       |       |        |         |          |P           |P          |        |R+       |        |          |          |         |              |
+|**Mineral 14 - 17**  |       |        |         |          |P           |           |P       |         |R-      |          |          |         |              |
+|**Plant 1 - 3**      |       |P       |         |          |            |           |        |         |        |P         |P         |P        |              |
+|**Plant 4 - 15**     |       |        |         |          |            |           |        |         |        |          |          |P        |              |
+|**Plant 16 - 17**    |       |        |         |          |            |           |        |         |        |          |          |P        |P             |
+|**Plant 18 - 19**    |       |        |         |          |            |           |        |R+       |        |          |          |P        |              |
+|**Tree 1 - 9**       |       |        |         |          |P           |           |        |         |P       |P         |P         |         |              |
+|**Tree 10**          |       |        |         |          |P           |           |        |P        |        |          |          |         |              |
+|**Three Stump 1 - 7**|       |        |         |          |P           |           |        |         |P       |          |          |         |              |
+
 ## Caveats 
 
 - BGT doesn't have an ***Undo*** feature.
