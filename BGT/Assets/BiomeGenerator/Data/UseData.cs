@@ -14,7 +14,7 @@ public class UseData
     private static Dictionary<string,int> fitenessFunctions = new Dictionary<string, int>();
     private static long sesionTime = 0;
     private static long suggestionsUsed = 0;
-    private static bool isDummy = false;
+    private static bool isDummy = true;
     public static bool IsDummy => isDummy;
 
     public static void AddGa(string ganame)
