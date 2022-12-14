@@ -30,8 +30,8 @@ Press ***DrawSettings -> Generate*** to generate the 3D map.
 
 The Biome Testing Kit has a group of objects marked with tags to define what properties it should provide (P) to the environment or require (R) from it. These tags are used by the AI to help the designer in the map creation process. The following table list the objects and tags present in the kit and their association. A P mark what the objects provides, R+ marks if the object require the pressence of the stat and R- if it requires it absence. Objects and tags can be modified by the user at will.
 
-|:---:                |:---:  |:---:   |:---:    |:---:     |:---:       |:---:      |:---:   |:---:    |:---:   |:---:     |:---:     |:---:    |:---:         |
-|                     |**Pet**|**Food**|**Shell**|**Danger**|**Collider**|**Mineral**|**Rock**|**Magic**|**Wood**|**Leaves**|**Shadow**|**Grass**|**Decorative**|  
+|                     |**Pet**|**Food**|**Shell**|**Danger**|**Collider**|**Mineral**|**Rock**|**Magic**|**Wood**|**Leaves**|**Shadow**|**Grass**|**Decorative**| 
+|:---:                |:---:  |:---:   |:---:    |:---:     |:---:       |:---:      |:---:   |:---:    |:---:   |:---:     |:---:     |:---:    |:---:         | 
 |**Cat**              |P      |        |         |          |            |           |        |         |        |          |R+        |         |              |
 |**Chicken**          |       |P       |         |          |            |           |        |         |        |          |          |R+       |              |
 |**Crab**             |       |P       |P        |P         |            |           |R+      |         |        |          |          |         |              |
