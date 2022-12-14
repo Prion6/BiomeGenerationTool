@@ -44,13 +44,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33cc7a8109d18824dbd427ac62ffc584, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 6737060826642976520}
-  priority: 0
-  stats: []
+  prefab: {fileID: 1383282189237981444}
+  priority: 15
+  stats:
+  - label: Collider
+  - label: Wood
+  - label: Shadow
+  - label: Leaves
   requirements: []
-  scaleRandomRange: 2.7
-  rotationRandomRange: {x: 0, y: 0, z: 0}
-  positionRandomRange: {x: 0, y: 0, z: 0}
+  scaleRandomRange: 2
+  rotationRandomRange: {x: 0, y: 360, z: 0}
+  positionRandomRange: {x: 5, y: 0, z: 5}
 --- !u!1001 &1383282189237884836
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -108,6 +112,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b58949b7c4a48e248b9d16f6bd173e4b, type: 3}
+--- !u!1 &1383282189237981444 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100000, guid: b58949b7c4a48e248b9d16f6bd173e4b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1383282189237884836}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1383282189237488932 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: b58949b7c4a48e248b9d16f6bd173e4b,

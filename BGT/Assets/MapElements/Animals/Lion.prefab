@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8757849982068994733}
   - component: {fileID: 7355917563355918021}
   m_Layer: 0
-  m_Name: Animal_5
+  m_Name: Lion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49,7 +49,6 @@ MonoBehaviour:
   stats:
   - label: Danger
   - label: Food
-  - label: Pelt
   requirements:
   - label: Grass
     lack: 0
