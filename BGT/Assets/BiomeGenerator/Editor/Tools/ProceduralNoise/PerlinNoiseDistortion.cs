@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using System.Linq;
 
 [CreateAssetMenu(menuName = "ProceduralGeneration/PerlinNoiseDistortion")]
 public class PerlinNoiseDistortion : ScriptableObject, INoiseGenerator
@@ -123,7 +124,7 @@ public class PerlinNoiseDistortion : ScriptableObject, INoiseGenerator
         int y2 = (int)(r.NextDouble() * (PerlinSize - height));
 
         //tercerPlot
-        int x3 = (int)(r.NextDouble() * (PerlinSize - width));
+        int x3 = (int)(r.NextDouble() * (PerlinSize - width));  
         int y3 = (int)(r.NextDouble() * (PerlinSize - height));
 
         //int c = 0;
@@ -157,10 +158,11 @@ public class PerlinNoiseDistortion : ScriptableObject, INoiseGenerator
         
 
         float[] outputData = new float[inputData.Length];
+        inputData.CopyTo(outputData, 0);
+        float[] pivot = new float[inputData.Length];
         int[] dirs = { 1, width + 1, width, width - 1, -1, -width - 1, -width, -width + 1 };
 
-        float inputMax = 0;
-        float outputMax = 0;
+        float inputMax = inputData.Max();
 
         for (int l = 0; l < octaves; l++)
         {
@@ -168,11 +170,7 @@ public class PerlinNoiseDistortion : ScriptableObject, INoiseGenerator
             {
                 for (int i = 0; i < width; i++)
                 {
-                    float val = inputData[j * width + i];
-                    if (val > inputMax)
-                    {
-                        inputMax = val;
-                    }
+                    float val = outputData[j * width + i];
                     int dots = 1;
                     foreach (int k in dirs)
                     {
@@ -181,17 +179,14 @@ public class PerlinNoiseDistortion : ScriptableObject, INoiseGenerator
                             continue;
                         }
                         dots++;
-                        val += inputData[(j * width + i) + k];
+                        val += outputData[(j * width + i) + k];
                     }
-                    outputData[j * width + i] = ((val / dots));
-                    if (l == octaves - 1 && outputData[j * width + i] > outputMax)
-                    {
-                        outputMax = outputData[j * width + i];
-                    }
+                    pivot[j * width + i] = ((val / dots));
                 }
             }
-            inputData = outputData;
+            pivot.CopyTo(outputData,0);
         }
+        float outputMax = outputData.Max();
 
         float scale = inputMax / outputMax;
 
